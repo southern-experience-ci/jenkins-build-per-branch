@@ -11,6 +11,7 @@ class JenkinsJobManager {
     String branchNameRegex
     String jenkinsUser
     String jenkinsPassword
+    String latestRegex
     
     Boolean dryRun = false
     Boolean noViews = false
@@ -32,6 +33,10 @@ class JenkinsJobManager {
         List<String> allBranchNames = gitApi.branchNames
         List<String> allJobNames = jenkinsApi.jobNames
 
+        if(latestRegex) {
+            allBranchNames = latestSubset(allBranchNames)
+        }
+
         // ensure that there is at least one job matching the template pattern, collect the set of template jobs
         List<TemplateJob> templateJobs = findRequiredTemplateJobs(allJobNames)
 
@@ -42,6 +47,25 @@ class JenkinsJobManager {
         if (!noViews) {
             syncViews(allBranchNames)
         }
+    }
+
+    public List<String> latestSubset(List<String> allBranchNames) {
+        List<String> allBranchesPlusLatestBranch = []
+        def latest = ""
+
+        allBranchNames.each() {
+            if(it.find("master|develop")) {
+                allBranchesPlusLatestBranch << it
+            } else if(it.find(latestRegex) && it > latest) {
+                latest = it
+                println "Found branch : " + it
+            }
+        }
+        if(latest) {
+            println "Adding latest branch only: " + latest
+            allBranchesPlusLatestBranch << latest
+        }
+        return allBranchesPlusLatestBranch
     }
 
     public void syncJobs(List<String> allBranchNames, List<String> allJobNames, List<TemplateJob> templateJobs) {
