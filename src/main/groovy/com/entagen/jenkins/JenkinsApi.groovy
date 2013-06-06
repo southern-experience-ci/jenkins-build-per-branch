@@ -1,4 +1,4 @@
-package com.entagen.jenkins
+ackage com.entagen.jenkins
 
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
@@ -69,8 +69,11 @@ class JenkinsApi {
     String configForMissingJob(ConcreteJob missingJob, List<TemplateJob> templateJobs) {
         TemplateJob templateJob = missingJob.templateJob
         String config = getJobConfig(templateJob.jobName)
-
+        
         def ignoreTags = ["assignedNode"]
+
+        //Enable jobs created from disabled template
+        config = config.replace("<disabled>true</disabled>", "<disabled>false</disabled>")
 
         // should work if there's a remote ("origin/master") or no remote (just "master")
         config = config.replaceAll("(\\p{Alnum}*[>/])(${templateJob.templateBranchName})<") { fullMatch, prefix, branchName ->
