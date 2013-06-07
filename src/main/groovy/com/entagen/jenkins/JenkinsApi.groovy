@@ -1,4 +1,4 @@
-ackage com.entagen.jenkins
+package com.entagen.jenkins
 
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
