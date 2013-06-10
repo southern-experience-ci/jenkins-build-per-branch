@@ -17,6 +17,7 @@ class JenkinsJobManager {
     Boolean noViews = false
     Boolean noDelete = false
     Boolean startOnCreate = false
+    Boolean noAppendLatestReleaseVersion = false;
 
     JenkinsApi jenkinsApi
     GitApi gitApi
@@ -85,12 +86,16 @@ class JenkinsJobManager {
 
         for(ConcreteJob missingJob in missingJobs) {
             println "Creating missing job: ${missingJob.jobName} from ${missingJob.templateJob.jobName}"
+            
+            if(noAppendLatestReleaseVersion && noDelete) {
+                missingJob.jobName = missingJob.jobName.replaceAll('_v[\\d.].+', "")
+            }
+
             jenkinsApi.cloneJobForBranch(missingJob, templateJobs)
             if (startOnCreate) {
                 jenkinsApi.startJob(missingJob)
             }
         }
-
     }
 
     public void deleteDeprecatedJobs(List<String> deprecatedJobNames) {
