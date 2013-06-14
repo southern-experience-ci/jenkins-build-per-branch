@@ -13,6 +13,7 @@ import org.apache.http.HttpRequest
 
 class JenkinsApi {
     String jenkinsServerUrl
+    boolean enable = false
     RESTClient restClient
     HttpRequestInterceptor requestInterceptor
     boolean findCrumb = true
@@ -72,8 +73,9 @@ class JenkinsApi {
         
         def ignoreTags = ["assignedNode"]
 
-        //Enable jobs created from disabled template
-        config = config.replace("<disabled>true</disabled>", "<disabled>false</disabled>")
+        if(enable) {
+            config = config.replace("<disabled>true</disabled>", "<disabled>false</disabled>")
+        }
 
         // should work if there's a remote ("origin/master") or no remote (just "master")
         config = config.replaceAll("(\\p{Alnum}*[>/])(${templateJob.templateBranchName})<") { fullMatch, prefix, branchName ->
