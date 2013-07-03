@@ -50,17 +50,19 @@ class JenkinsJobManager {
         }
     }
 
-    public List<String> latestSubset(List<String> allBranchNames) {
+
+    public List<String> latestSubset(List<String> allBranchNames) {   
         List<String> allBranchesPlusLatestBranch = []
-        def latest = ""
+        def latest = "0.0"
 
         allBranchNames.each() {
             if(it.find("master|develop")) {
                 allBranchesPlusLatestBranch << it
             } else if(it.find(latestRegex)) {
-                latest = bigger(it, latest)
+                latest = "release/v" + bigger(it.replaceAll("[a-zA-Z/]", ""), latest.replaceAll("[a-zA-Z/]", ""))
             }
         }
+        
         if(latest) {
             println "Adding latest branch only: " + latest
             allBranchesPlusLatestBranch << latest
@@ -69,11 +71,11 @@ class JenkinsJobManager {
     }
 
     private String bigger(String v1, String v2) {
-        int result = compare(v1.split("//."), v2.split("//."), 0)
+        int result = compare(v1.split("\\."), v2.split("\\."), 0)
         if(result >=0) {
-            print v1
+            return v1
         } else {
-            print v2
+            return v2
         }
     }
 
