@@ -55,6 +55,7 @@ class JenkinsJobManager {
         def latest = ""
 
         allBranchNames.each() {
+            println "Branch Found ...." + it
             if(it.find("master|develop")) {
                 allBranchesPlusLatestBranch << it
             } else if(it.find(latestRegex) && it > latest) {
