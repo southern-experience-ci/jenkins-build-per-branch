@@ -55,12 +55,10 @@ class JenkinsJobManager {
         def latest = ""
 
         allBranchNames.each() {
-            println "Branch Found ...." + it
             if(it.find("master|develop")) {
                 allBranchesPlusLatestBranch << it
-            } else if(it.find(latestRegex) && it > latest) {
-                latest = it
-                println "Found branch : " + it
+            } else if(it.find(latestRegex)) {
+                latest = bigger(it, latest)
             }
         }
         if(latest) {
@@ -68,6 +66,23 @@ class JenkinsJobManager {
             allBranchesPlusLatestBranch << latest
         }
         return allBranchesPlusLatestBranch
+    }
+
+    private String bigger(String v1, String v2) {
+        int result = compare(v1.split("//."), v2.split("//."), 0)
+        if(result >=0) {
+            print v1
+        } else {
+            print v2
+        }
+    }
+
+    private int compare(String[] arr1, String[] arr2, int index){
+        // if arrays do not have equal size then and comparison reached the upper bound of one of them
+        // then the longer array is considered the bigger ( --> 2.2.0 is bigger then 2.2)
+        if(arr1.length <= index || arr2.length <= index) return arr1.length - arr2.length
+        int result = Integer.parseInt(arr1[index]) - Integer.parseInt(arr2[index])
+        return result == 0 ?  compare(arr1, arr2, ++index) : result
     }
 
     public void syncJobs(List<String> allBranchNames, List<String> allJobNames, List<TemplateJob> templateJobs) {
