@@ -56,6 +56,13 @@ class JenkinsApi {
         String missingJobConfig = configForMissingJob(missingJob, templateJobs)
         TemplateJob templateJob = missingJob.templateJob
 
+        missingJob.jobName = missingJob.jobName.replaceAll(~/-release_v.*/, "")
+        println "Job name is changed too ... " + missingJob.jobName
+
+        if(getJobNames().contains(missingJob.jobName)) {
+            deleteJob(missingJob.jobName)  
+        }
+        
         //Copy job with jenkins copy job api, this will make sure jenkins plugins get the call to make a copy if needed (promoted builds plugin needs this)
         post('createItem', missingJobConfig, [name: missingJob.jobName, mode: 'copy', from: templateJob.jobName], ContentType.XML)
 
