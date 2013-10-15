@@ -19,6 +19,8 @@ class JenkinsJobManager {
     Boolean startOnCreate = false
     Boolean enableDisabled = false;
 
+    String workspacePath = '/var/jenkinsData/workspace/' //Change if changed on Jenkins Server path to WS.
+
     JenkinsApi jenkinsApi
     GitApi gitApi
 
@@ -116,7 +118,7 @@ class JenkinsJobManager {
         if (!deprecatedJobNames) return
         println "Deleting deprecated jobs:\n\t${deprecatedJobNames.join('\n\t')}"
         deprecatedJobNames.each { String jobName ->
-            def jobWSPath = "/var/jenkinsData/workspace/${jobName}"
+            def jobWSPath = workspacePath + jobName
             println "Deleting deprecated job ... ${jobWSPath}"
             jenkinsApi.deleteJob(jobName)
             //new File(jobWSPath).deleteDir()
