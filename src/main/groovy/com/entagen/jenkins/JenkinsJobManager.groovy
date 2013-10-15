@@ -121,7 +121,7 @@ class JenkinsJobManager {
             def jobWSPath = workspacePath + jobName
             println "Deleting deprecated job ... ${jobWSPath}"
             jenkinsApi.deleteJob(jobName)
-            //new File(jobWSPath).deleteDir()
+            new File(jobWSPath).deleteDir()
         }
     }
 
