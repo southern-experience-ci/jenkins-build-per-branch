@@ -12,8 +12,6 @@ class JenkinsJobManager {
     String jenkinsUser
     String jenkinsPassword
     String latestRegex
-    String genericTemplateName
-
     Boolean dryRun = false
     Boolean noViews = false
     Boolean noDelete = false
@@ -143,7 +141,7 @@ class JenkinsJobManager {
     }
 
     List<TemplateJob> findRequiredTemplateJobs(List<String> allJobNames) {
-        String regex = /^($genericTemplateName-[^-]*)-($templateBranchName)$/
+        String regex = /^($templateJobPrefix-[^-]*)-($templateBranchName)$/
 
         List<TemplateJob> templateJobs = allJobNames.findResults { String jobName ->
             TemplateJob templateJob = null
