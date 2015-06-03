@@ -12,7 +12,8 @@ class JenkinsJobManager {
     String jenkinsUser
     String jenkinsPassword
     String latestRegex
-    
+    String genericTemplateName
+
     Boolean dryRun = false
     Boolean noViews = false
     Boolean noDelete = false
@@ -53,7 +54,7 @@ class JenkinsJobManager {
     }
 
 
-    public List<String> latestSubset(List<String> allBranchNames) {   
+    public List<String> latestSubset(List<String> allBranchNames) {
         List<String> allBranchesPlusLatestBranch = []
         def latest = "0.0"
 
@@ -64,7 +65,7 @@ class JenkinsJobManager {
                 latest = "release/v" + bigger(it.replaceAll("[a-zA-Z/]", ""), latest.replaceAll("[a-zA-Z/]", ""))
             }
         }
-        
+
         if(latest) {
             println "Adding latest branch only: " + latest
             allBranchesPlusLatestBranch << latest
@@ -142,7 +143,7 @@ class JenkinsJobManager {
     }
 
     List<TemplateJob> findRequiredTemplateJobs(List<String> allJobNames) {
-        String regex = /^($templateJobPrefix-[^-]*)-($templateBranchName)$/
+        String regex = /^($genericTemplateName-[^-]*)-($templateBranchName)$/
 
         List<TemplateJob> templateJobs = allJobNames.findResults { String jobName ->
             TemplateJob templateJob = null
