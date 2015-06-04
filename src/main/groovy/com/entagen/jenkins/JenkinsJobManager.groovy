@@ -20,7 +20,7 @@ class JenkinsJobManager {
     Boolean startOnCreate = false
     Boolean enableDisabled = false;
 
-    String workspacePath = '/var/jenkinsData/workspace/' //Change if changed on Jenkins Server path to WS.
+    String workspacePath = '/home/jenkins/Home/workspace/' //Change if changed on Jenkins Server path to WS.
 
     JenkinsApi jenkinsApi
     GitApi gitApi
